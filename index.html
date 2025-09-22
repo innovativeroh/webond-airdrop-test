@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Open in App — web0nd</title>
+  <meta name="description" content="Redirecting to the web0nd app..." />
+  <style>
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+    .wrap{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;background:linear-gradient(180deg,#f7fbff,#ffffff)}
+    .card{max-width:680px;width:100%;text-align:center;background:#fff;padding:28px;border-radius:14px;box-shadow:0 10px 30px rgba(20,30,70,0.08)}
+    h1{margin:0 0 8px;font-size:20px}
+    p{margin:0 0 18px;color:#444}
+    .meta{font-size:13px;color:#666;margin-bottom:18px;word-break:break-all}
+    button{appearance:none;border:0;background:#0a84ff;color:#fff;padding:11px 16px;border-radius:10px;font-weight:600;cursor:pointer}
+    .alt{margin-top:12px;font-size:13px}
+    a.inline{color:#0a84ff;text-decoration:none;font-weight:600}
+    .hint{margin-top:14px;font-size:13px;color:#888}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-live="polite">
+      <h1>Opening in web0nd app…</h1>
+      <p>If your app is installed it should open automatically. Otherwise you'll be taken to the app store.</p>
+
+      <div class="meta" id="meta">Preparing link…</div>
+
+      <div>
+        <button id="openBtn">Open in App</button>
+        <div class="alt">
+          <a id="webFallback" class="inline" href="#" target="_blank" rel="noopener">Open in browser instead</a>
+        </div>
+        <div class="hint">If nothing happens, tap the button above or use the browser fallback link.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // ---------- CONFIG ----------
+      // Replace these with your actual store URLs
+      const APP_STORE_URL = "https://apps.apple.com/app/idYOUR_APP_ID";
+      const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=YOUR_ANDROID_PACKAGE";
+      // Timeout before falling back to the store (milliseconds)
+      const FALLBACK_DELAY = 1400;
+
+      // ---------- helper to build deep link ----------
+      // This page expects query parameters, e.g.:
+      // https://yourdomain/redirect?exchangeId=...&source=airdrop...
+      const buildDeepLink = () => {
+        // Use the current page's search and hash and attach them to the scheme.
+        // e.g. web0nd://exchange?exchangeId=...&source=...
+        const search = window.location.search || "";
+        const hash = window.location.hash || "";
+        // If you want a different path other than /exchange, you can pass `path` param
+        // e.g. /redirect?path=/some/path&other=...
+        const urlParams = new URLSearchParams(search);
+        const explicitPath = urlParams.get("path"); // optional
+        const path = explicitPath ? explicitPath : "/exchange";
+        // Ensure path starts with a single slash
+        const normalizedPath = path.startsWith("/") ? path : ("/" + path);
+
+        // Construct the deep link: scheme://path + original query (without 'path' param)
+        // Remove the temporary 'path' param if present
+        if (explicitPath) urlParams.delete("path");
+
+        const qs = urlParams.toString();
+        const deep = qs ? `web0nd://${normalizedPath}?${qs}${hash}` : `web0nd://${normalizedPath}${hash}`;
+        return deep;
+      };
+
+      const deepLink = buildDeepLink();
+
+      // show debug/meta
+      const metaEl = document.getElementById("meta");
+      metaEl.textContent = deepLink;
+
+      // Update browser fallback link (open web fallback, maybe show info page)
+      const webFallback = document.getElementById("webFallback");
+      // You can point this to a useful web page that shows instructions or content.
+      webFallback.href = window.location.href.replace(/\/redirect\/?/, "/"); // default: go to site root
+      webFallback.textContent = "Open a friendly web page instead";
+
+      // Attempt to open deep link
+      let fallbackTimer = null;
+      let didHide = false;
+
+      const openDeepLink = () => {
+        // For most modern browsers, setting window.location to the deep link will attempt to open the app.
+        // We also try an iframe method for older browsers.
+        const now = Date.now();
+
+        // Try iframe trick (some browsers block, but safe to try)
+        const iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+        iframe.src = deepLink;
+        document.body.appendChild(iframe);
+
+        // Also try setting location (works for many)
+        try {
+          window.location.href = deepLink;
+        } catch (e) {
+          // ignore
+        }
+
+        // Fallback: after delay, send user to store depending on platform
+        clearTimeout(fallbackTimer);
+        fallbackTimer = setTimeout(() => {
+          // If page was hidden (user switched to app), don't redirect
+          if (didHide) return;
+
+          const ua = navigator.userAgent || "";
+          const isAndroid = /Android/i.test(ua);
+          const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+          if (isIOS) {
+            window.location.replace(APP_STORE_URL);
+          } else if (isAndroid) {
+            window.location.replace(PLAY_STORE_URL);
+          } else {
+            // Desktop / unknown: show a simple info page or stay on web fallback
+            // Redirect to your website root
+            window.location.replace(webFallback.href);
+          }
+        }, FALLBACK_DELAY);
+
+        // remove iframe a little later to avoid memory leak
+        setTimeout(() => { try { document.body.removeChild(iframe); } catch (e) {} }, 2500);
+      };
+
+      // If the page becomes hidden (user switched to another app), we assume the app opened successfully
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          didHide = true;
+          clearTimeout(fallbackTimer);
+        }
+      }, false);
+
+      // Wire the button
+      const btn = document.getElementById("openBtn");
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        openDeepLink();
+      }, false);
+
+      // Try auto-opening on load (good UX for mobile)
+      // give a tiny delay to allow the page to fully render
+      window.addEventListener("load", () => {
+        setTimeout(openDeepLink, 300);
+      });
+    })();
+  </script>
+</body>
+</html>
