@@ -31,13 +31,16 @@
   <button id="triggerApp">Open Exchange in App</button>
 
   <script>
-    const exchangeId = '12345'; // Replace with dynamic ID if needed
+    // Replace this with your dynamic exchange request object
+    const exchangeRequest = { exchange_id: '12345' };
+
     const button = document.getElementById('triggerApp');
 
     button.addEventListener('click', () => {
-      // Deep link to open the app
-      window.location.href = `web0nd://exchangeId=${exchangeId}`;
-      // Optional fallback for browsers: redirect to App Store / web page
+      const url = `web0nd://exchange?exchangeId=${exchangeRequest.exchange_id}`;
+      window.location.href = url;
+
+      // Optional fallback
       setTimeout(() => {
         alert('If the app did not open, please make sure it is installed.');
       }, 1000);
