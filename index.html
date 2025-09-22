@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web0nd Exchange</title>
+  <title>Web0nd Exchange Test</title>
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -28,6 +28,8 @@
       color: #333;
       text-align: center;
       margin-bottom: 30px;
+      font-size: 24px;
+      font-weight: 600;
     }
     .button-container {
       display: flex;
@@ -46,7 +48,7 @@
       justify-content: center;
       gap: 8px;
       width: 100%;
-      transition: background-color 0.2s;
+      transition: all 0.2s ease;
     }
     .primary-button {
       background-color: #007AFF;
@@ -68,81 +70,127 @@
     }
     #status {
       margin-top: 20px;
+      padding: 10px;
+      border-radius: 8px;
       text-align: center;
-      color: #666;
+      font-size: 14px;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .info {
+      background-color: #cce5ff;
+      color: #004085;
+    }
+    .url-display {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      word-break: break-all;
+      display: none;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Web0nd Exchange</h1>
+    <h1>Web0nd Exchange Test</h1>
     <div class="button-container">
-      <button id="successButton" class="primary-button">
-        Go to Success Screen
+      <button id="directSuccessButton" class="primary-button">
+        Direct Success Screen
       </button>
       <button id="exchangeButton" class="secondary-button">
-        Test Exchange with ID
+        Exchange with ID
       </button>
     </div>
     <div id="status"></div>
+    <div id="urlDisplay" class="url-display"></div>
   </div>
 
   <script>
     const statusDiv = document.getElementById('status');
-    const successButton = document.getElementById('successButton');
+    const urlDisplay = document.getElementById('urlDisplay');
+    const directSuccessButton = document.getElementById('directSuccessButton');
     const exchangeButton = document.getElementById('exchangeButton');
     
-    // Test Exchange ID
+    // Test exchange ID - you can modify this for testing
     const testExchangeId = '12345';
 
-    function showStatus(message, isError = false) {
-      statusDiv.style.color = isError ? '#dc3545' : '#28a745';
+    function showStatus(message, type = 'info') {
       statusDiv.textContent = message;
+      statusDiv.className = type;
+      urlDisplay.style.display = 'block';
+    }
+
+    function showUrl(url) {
+      urlDisplay.textContent = `URL: ${url}`;
+      urlDisplay.style.display = 'block';
     }
 
     function disableButtons() {
-      successButton.classList.add('loading');
+      directSuccessButton.classList.add('loading');
       exchangeButton.classList.add('loading');
-      successButton.disabled = true;
+      directSuccessButton.disabled = true;
       exchangeButton.disabled = true;
     }
 
     function enableButtons() {
-      successButton.classList.remove('loading');
+      directSuccessButton.classList.remove('loading');
       exchangeButton.classList.remove('loading');
-      successButton.disabled = false;
+      directSuccessButton.disabled = false;
       exchangeButton.disabled = false;
     }
 
-    // Direct success screen navigation
-    successButton.addEventListener('click', () => {
+    // Handle direct success navigation
+    directSuccessButton.addEventListener('click', () => {
+      const url = 'web0nd://exchangeSuccessful';
       disableButtons();
-      showStatus('Opening Web0nd app...');
+      showStatus('Opening Web0nd app...', 'info');
+      showUrl(url);
       
-      // Use the direct success deep link
-      window.location.href = 'web0nd://exchangeSuccessful';
+      window.location.href = url;
       
-      // Re-enable buttons after delay
       setTimeout(() => {
         enableButtons();
-        showStatus('If the app didn\'t open, make sure Web0nd is installed.');
+        showStatus('If the app didn\'t open, please make sure Web0nd is installed', 'info');
       }, 2000);
     });
 
-    // Exchange with ID flow
+    // Handle exchange with ID
     exchangeButton.addEventListener('click', () => {
+      const url = `web0nd://exchange?exchangeId=${encodeURIComponent(testExchangeId)}`;
       disableButtons();
-      showStatus('Opening Web0nd app with exchange ID...');
+      showStatus('Opening Web0nd app with exchange ID...', 'info');
+      showUrl(url);
       
-      // Use the exchange ID deep link
-      window.location.href = `web0nd://exchange?exchangeId=${testExchangeId}`;
+      window.location.href = url;
       
-      // Re-enable buttons after delay
       setTimeout(() => {
         enableButtons();
-        showStatus('If the app didn\'t open, make sure Web0nd is installed.');
+        showStatus('If the app didn\'t open, please make sure Web0nd is installed', 'info');
       }, 2000);
     });
+
+    // Check if URL has exchangeId parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const exchangeId = urlParams.get('exchangeId');
+    if (exchangeId) {
+      const url = `web0nd://exchange?exchangeId=${encodeURIComponent(exchangeId)}`;
+      showStatus('Processing exchange...', 'info');
+      showUrl(url);
+      
+      // Small delay to ensure the status is shown
+      setTimeout(() => {
+        window.location.href = url;
+      }, 500);
+    }
   </script>
 </body>
 </html>
