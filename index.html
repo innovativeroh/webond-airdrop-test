@@ -28,19 +28,27 @@
   </style>
 </head>
 <body>
-  <button id="triggerApp">Open Exchange in App</button>
+  <button id="triggerExchangeId">Open Exchange with ID</button>
+  <button id="triggerDirectExchange">Open Direct Exchange</button>
 
   <script>
-    // Replace this with your dynamic exchange request object
-    const exchangeRequest = { exchange_id: '12345' };
+    const exchangeId = '12345'; // Replace with dynamic ID if needed
+    const exchangeIdButton = document.getElementById('triggerExchangeId');
+    const directExchangeButton = document.getElementById('triggerDirectExchange');
 
-    const button = document.getElementById('triggerApp');
+    exchangeIdButton.addEventListener('click', () => {
+      // Deep link to open the app with exchange ID
+      window.location.href = `web0nd://exchange?exchangeId=${exchangeId}`;
+      // Optional fallback for browsers
+      setTimeout(() => {
+        alert('If the app did not open, please make sure it is installed.');
+      }, 1000);
+    });
 
-    button.addEventListener('click', () => {
-      const url = `web0nd://exchange?exchangeId=${exchangeRequest.exchange_id}`;
-      window.location.href = url;
-
-      // Optional fallback
+    directExchangeButton.addEventListener('click', () => {
+      // Deep link to open direct exchange
+      window.location.href = 'web0nd://exchange';
+      // Optional fallback for browsers
       setTimeout(() => {
         alert('If the app did not open, please make sure it is installed.');
       }, 1000);
