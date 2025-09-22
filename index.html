@@ -30,11 +30,13 @@
 <body>
   <button id="triggerExchangeId">Open Exchange with ID</button>
   <button id="triggerDirectExchange">Open Direct Exchange</button>
+  <button id="triggerExchangeSuccess">Test Case 2: Exchange Successful</button>
 
   <script>
     const exchangeId = '12345'; // Replace with dynamic ID if needed
     const exchangeIdButton = document.getElementById('triggerExchangeId');
     const directExchangeButton = document.getElementById('triggerDirectExchange');
+    const exchangeSuccessButton = document.getElementById('triggerExchangeSuccess');
 
     exchangeIdButton.addEventListener('click', () => {
       // Deep link to open the app with exchange ID
@@ -48,6 +50,15 @@
     directExchangeButton.addEventListener('click', () => {
       // Deep link to open direct exchange
       window.location.href = 'web0nd://exchange';
+      // Optional fallback for browsers
+      setTimeout(() => {
+        alert('If the app did not open, please make sure it is installed.');
+      }, 1000);
+    });
+
+    exchangeSuccessButton.addEventListener('click', () => {
+      // Deep link for exchange successful test case
+      window.location.href = 'web0nd://exchangeSuccessful';
       // Optional fallback for browsers
       setTimeout(() => {
         alert('If the app did not open, please make sure it is installed.');
