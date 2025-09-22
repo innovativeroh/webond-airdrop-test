@@ -3,66 +3,145 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trigger Web0nd Exchange</title>
+  <title>Web0nd Exchange</title>
   <style>
     body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      height: 100vh;
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f0e6d3;
+    }
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
     button {
-      padding: 15px 30px;
-      font-size: 18px;
-      background-color: #4CAF50;
-      color: white;
+      padding: 15px 20px;
+      font-size: 16px;
+      font-weight: 600;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      transition: background-color 0.2s;
     }
-    button:hover {
-      background-color: #45a049;
+    .primary-button {
+      background-color: #007AFF;
+      color: white;
+    }
+    .primary-button:hover {
+      background-color: #0056b3;
+    }
+    .secondary-button {
+      background-color: #e3e3e3;
+      color: #007AFF;
+    }
+    .secondary-button:hover {
+      background-color: #d4d4d4;
+    }
+    .loading {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    #status {
+      margin-top: 20px;
+      text-align: center;
+      color: #666;
     }
   </style>
 </head>
 <body>
-  <button id="triggerExchangeId">Open Exchange with ID</button>
-  <button id="triggerDirectExchange">Open Direct Exchange</button>
-  <button id="triggerExchangeSuccess">Test Case 2: Exchange Successful</button>
+  <div class="container">
+    <h1>Web0nd Exchange</h1>
+    <div class="button-container">
+      <button id="successButton" class="primary-button">
+        Go to Success Screen
+      </button>
+      <button id="exchangeButton" class="secondary-button">
+        Test Exchange with ID
+      </button>
+    </div>
+    <div id="status"></div>
+  </div>
 
   <script>
-    const exchangeId = '12345'; // Replace with dynamic ID if needed
-    const exchangeIdButton = document.getElementById('triggerExchangeId');
-    const directExchangeButton = document.getElementById('triggerDirectExchange');
-    const exchangeSuccessButton = document.getElementById('triggerExchangeSuccess');
+    const statusDiv = document.getElementById('status');
+    const successButton = document.getElementById('successButton');
+    const exchangeButton = document.getElementById('exchangeButton');
+    
+    // Test Exchange ID
+    const testExchangeId = '12345';
 
-    exchangeIdButton.addEventListener('click', () => {
-      // Deep link to open the app with exchange ID
-      window.location.href = `web0nd://exchange?exchangeId=${exchangeId}`;
-      // Optional fallback for browsers
-      setTimeout(() => {
-        alert('If the app did not open, please make sure it is installed.');
-      }, 1000);
-    });
+    function showStatus(message, isError = false) {
+      statusDiv.style.color = isError ? '#dc3545' : '#28a745';
+      statusDiv.textContent = message;
+    }
 
-    directExchangeButton.addEventListener('click', () => {
-      // Deep link to open direct exchange
-      window.location.href = 'web0nd://exchange';
-      // Optional fallback for browsers
-      setTimeout(() => {
-        alert('If the app did not open, please make sure it is installed.');
-      }, 1000);
-    });
+    function disableButtons() {
+      successButton.classList.add('loading');
+      exchangeButton.classList.add('loading');
+      successButton.disabled = true;
+      exchangeButton.disabled = true;
+    }
 
-    exchangeSuccessButton.addEventListener('click', () => {
-      // Deep link for exchange successful test case
+    function enableButtons() {
+      successButton.classList.remove('loading');
+      exchangeButton.classList.remove('loading');
+      successButton.disabled = false;
+      exchangeButton.disabled = false;
+    }
+
+    // Direct success screen navigation
+    successButton.addEventListener('click', () => {
+      disableButtons();
+      showStatus('Opening Web0nd app...');
+      
+      // Use the direct success deep link
       window.location.href = 'web0nd://exchangeSuccessful';
-      // Optional fallback for browsers
+      
+      // Re-enable buttons after delay
       setTimeout(() => {
-        alert('If the app did not open, please make sure it is installed.');
-      }, 1000);
+        enableButtons();
+        showStatus('If the app didn\'t open, make sure Web0nd is installed.');
+      }, 2000);
+    });
+
+    // Exchange with ID flow
+    exchangeButton.addEventListener('click', () => {
+      disableButtons();
+      showStatus('Opening Web0nd app with exchange ID...');
+      
+      // Use the exchange ID deep link
+      window.location.href = `web0nd://exchange?exchangeId=${testExchangeId}`;
+      
+      // Re-enable buttons after delay
+      setTimeout(() => {
+        enableButtons();
+        showStatus('If the app didn\'t open, make sure Web0nd is installed.');
+      }, 2000);
     });
   </script>
 </body>
