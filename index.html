@@ -119,9 +119,7 @@
     const urlDisplay = document.getElementById('urlDisplay');
     const directSuccessButton = document.getElementById('directSuccessButton');
     const exchangeButton = document.getElementById('exchangeButton');
-    
-    // Test exchange ID - you can modify this for testing
-    const testExchangeId = '12345';
+   
 
     function showStatus(message, type = 'info') {
       statusDiv.textContent = message;
@@ -165,7 +163,15 @@
 
     // Handle exchange with ID
     exchangeButton.addEventListener('click', () => {
-      const url = `web0nd://exchange?exchangeId=${encodeURIComponent(testExchangeId)}`;
+      const urlParams = new URLSearchParams(window.location.search);
+      const currentExchangeId = urlParams.get('exchangeId');
+      
+      if (!currentExchangeId) {
+        showStatus('No exchange ID found in URL', 'error');
+        return;
+      }
+
+      const url = `web0nd://exchange?exchangeId=${encodeURIComponent(currentExchangeId)}`;
       disableButtons();
       showStatus('Opening Web0nd app with exchange ID...', 'info');
       showUrl(url);
