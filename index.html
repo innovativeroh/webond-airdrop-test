@@ -1,202 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web0nd Exchange Test</title>
-  <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background-color: #f0e6d3;
-    }
-    .container {
-      background-color: white;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
-    }
-    h1 {
-      color: #333;
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 24px;
-      font-weight: 600;
-    }
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    button {
-      padding: 15px 20px;
-      font-size: 16px;
-      font-weight: 600;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      transition: all 0.2s ease;
-    }
-    .primary-button {
-      background-color: #007AFF;
-      color: white;
-    }
-    .primary-button:hover {
-      background-color: #0056b3;
-    }
-    .secondary-button {
-      background-color: #e3e3e3;
-      color: #007AFF;
-    }
-    .secondary-button:hover {
-      background-color: #d4d4d4;
-    }
-    .loading {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
-    #status {
-      margin-top: 20px;
-      padding: 10px;
-      border-radius: 8px;
-      text-align: center;
-      font-size: 14px;
-    }
-    .success {
-      background-color: #d4edda;
-      color: #155724;
-    }
-    .error {
-      background-color: #f8d7da;
-      color: #721c24;
-    }
-    .info {
-      background-color: #cce5ff;
-      color: #004085;
-    }
-    .url-display {
-      margin-top: 20px;
-      padding: 15px;
-      background-color: #f8f9fa;
-      border-radius: 8px;
-      font-family: monospace;
-      font-size: 12px;
-      word-break: break-all;
-      display: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Web0nd Exchange Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0e6d3;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        button {
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .primary-button {
+            background-color: #007AFF;
+            color: white;
+        }
+
+        .primary-button:hover {
+            background-color: #0056b3;
+        }
+
+        .secondary-button {
+            background-color: #e3e3e3;
+            color: #007AFF;
+        }
+
+        .secondary-button:hover {
+            background-color: #d4d4d4;
+        }
+
+        .loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        #status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .info {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .url-display {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+            display: none;
+        }
+
+        .retry-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>Web0nd Exchange Test</h1>
-    <div class="button-container">
-      <button id="directSuccessButton" class="primary-button">
-        Direct Success Screen
-      </button>
-      <button id="exchangeButton" class="secondary-button">
-        Exchange with ID
-      </button>
+    <div class="container">
+        <h1>Enhanced Web0nd Test</h1>
+        <div class="button-container">
+            <button id="exchangeButton" class="primary-button">
+                Exchange with Persistent Retry
+            </button>
+            <button id="stopButton" class="secondary-button" style="display: none;">
+                Stop Trying
+            </button>
+        </div>
+        <div id="status"></div>
+        <div id="urlDisplay" class="url-display"></div>
+        <div id="retryInfo" class="retry-info"></div>
     </div>
-    <div id="status"></div>
-    <div id="urlDisplay" class="url-display"></div>
-  </div>
 
-  <script>
-    const statusDiv = document.getElementById('status');
-    const urlDisplay = document.getElementById('urlDisplay');
-    const directSuccessButton = document.getElementById('directSuccessButton');
-    const exchangeButton = document.getElementById('exchangeButton');
-   
+    <script>
+        const statusDiv = document.getElementById('status');
+        const urlDisplay = document.getElementById('urlDisplay');
+        const retryInfo = document.getElementById('retryInfo');
+        const exchangeButton = document.getElementById('exchangeButton');
+        const stopButton = document.getElementById('stopButton');
 
-    function showStatus(message, type = 'info') {
-      statusDiv.textContent = message;
-      statusDiv.className = type;
-      urlDisplay.style.display = 'block';
-    }
+        let retryInterval = null;
+        let retryCount = 0;
 
-    function showUrl(url) {
-      urlDisplay.textContent = `URL: ${url}`;
-      urlDisplay.style.display = 'block';
-    }
+        function showStatus(message, type = 'info') {
+            statusDiv.textContent = message;
+            statusDiv.className = type;
+        }
 
-    function disableButtons() {
-      directSuccessButton.classList.add('loading');
-      exchangeButton.classList.add('loading');
-      directSuccessButton.disabled = true;
-      exchangeButton.disabled = true;
-    }
+        function showUrl(url) {
+            urlDisplay.textContent = `URL: ${url}`;
+            urlDisplay.style.display = 'block';
+        }
 
-    function enableButtons() {
-      directSuccessButton.classList.remove('loading');
-      exchangeButton.classList.remove('loading');
-      directSuccessButton.disabled = false;
-      exchangeButton.disabled = false;
-    }
+        function updateRetryInfo(count) {
+            retryInfo.textContent = `Retry attempt: ${count} (every 2 seconds)`;
+        }
 
-    // Handle direct success navigation
-    directSuccessButton.addEventListener('click', () => {
-      const url = 'web0nd://exchangeSuccessful';
-      disableButtons();
-      showStatus('Opening Web0nd app...', 'info');
-      showUrl(url);
-      
-      window.location.href = url;
-      
-      setTimeout(() => {
-        enableButtons();
-        showStatus('If the app didn\'t open, please make sure Web0nd is installed', 'info');
-      }, 2000);
-    });
+        function stopRetrying() {
+            if (retryInterval) {
+                clearInterval(retryInterval);
+                retryInterval = null;
+            }
+            retryCount = 0;
+            exchangeButton.style.display = 'block';
+            stopButton.style.display = 'none';
+            exchangeButton.classList.remove('loading');
+            exchangeButton.disabled = false;
+            showStatus('Stopped trying', 'info');
+            retryInfo.textContent = '';
+        }
 
-    // Handle exchange with ID
-    exchangeButton.addEventListener('click', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const currentExchangeId = urlParams.get('exchangeId');
-      
-      if (!currentExchangeId) {
-        showStatus('No exchange ID found in URL', 'error');
-        return;
-      }
+        function tryOpenApp(url) {
+            console.log(`Attempt ${retryCount + 1}: Opening ${url}`);
 
-      const url = `web0nd://exchange?exchangeId=${encodeURIComponent(currentExchangeId)}`;
-      disableButtons();
-      showStatus('Opening Web0nd app with exchange ID...', 'info');
-      showUrl(url);
-      
-      window.location.href = url;
-      
-      setTimeout(() => {
-        enableButtons();
-        showStatus('If the app didn\'t open, please make sure Web0nd is installed', 'info');
-      }, 2000);
-    });
+            // Create a hidden iframe to trigger the URL
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = url;
+            document.body.appendChild(iframe);
 
-    // Check if URL has exchangeId parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const exchangeId = urlParams.get('exchangeId');
-    if (exchangeId) {
-      const url = `web0nd://exchange?exchangeId=${encodeURIComponent(exchangeId)}`;
-      showStatus('Processing exchange...', 'info');
-      showUrl(url);
-      
-      // Small delay to ensure the status is shown
-      setTimeout(() => {
-        window.location.href = url;
-      }, 500);
-    }
-  </script>
+            // Remove iframe after a short delay
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
+
+            // Also try window.location as backup
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+
+        // Handle exchange with persistent retry
+        exchangeButton.addEventListener('click', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentExchangeId = urlParams.get('exchangeId');
+
+            if (!currentExchangeId) {
+                showStatus('No exchange ID found in URL', 'error');
+                return;
+            }
+
+            const url = `web0nd://exchange?exchangeId=${encodeURIComponent(currentExchangeId)}`;
+
+            exchangeButton.classList.add('loading');
+            exchangeButton.disabled = true;
+            exchangeButton.style.display = 'none';
+            stopButton.style.display = 'block';
+
+            showStatus('Trying to open Web0nd app...', 'info');
+            showUrl(url);
+
+            retryCount = 0;
+
+            // Try immediately
+            tryOpenApp(url);
+            updateRetryInfo(++retryCount);
+
+            // Then retry every 2 seconds
+            retryInterval = setInterval(() => {
+                tryOpenApp(url);
+                updateRetryInfo(++retryCount);
+
+                // Stop after 30 attempts (1 minute)
+                if (retryCount >= 30) {
+                    stopRetrying();
+                    showStatus('Stopped after 30 attempts. Please make sure Web0nd is installed.', 'error');
+                }
+            }, 2000);
+        });
+
+        stopButton.addEventListener('click', stopRetrying);
+
+        // Auto-start if URL has exchangeId
+        const urlParams = new URLSearchParams(window.location.search);
+        const exchangeId = urlParams.get('exchangeId');
+        if (exchangeId) {
+            // Auto-click the exchange button after a short delay
+            setTimeout(() => {
+                exchangeButton.click();
+            }, 1000);
+        }
+
+        // Handle page visibility change (when user comes back to page)
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && retryInterval) {
+                console.log('Page became visible, app might not have opened');
+                // Continue retrying if we were already trying
+            } else if (document.visibilityState === 'hidden' && retryInterval) {
+                console.log('Page became hidden, app might have opened');
+                // Don't stop immediately, let it continue for a bit
+            }
+        });
+    </script>
 </body>
+
 </html>
